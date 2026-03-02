@@ -155,6 +155,92 @@ generator_expression = (n * 2 for n in number_list if n > 3)
 
 ---
 
+## Implementation & Features
+
+This section documents the completed implementation of the Student Data Management System.
+
+### Module Overview
+
+| Module | File | Purpose |
+|--------|------|---------|
+| Student Records | `lib/student_data.py` | Defines the master student list using tuples inside a list |
+| Filtering | `lib/filters.py` | Filters students by major using a **list comprehension** |
+| Data Processing | `lib/data_processing.py` | Formats and displays student records |
+| Set Operations | `lib/set_operations.py` | Extracts unique majors using a **set comprehension** |
+| Generator | `lib/data_generator.py` | Lazily yields filtered students using a **generator expression** |
+
+---
+
+### Data Structures Used
+
+#### 1. Lists & Tuples — `lib/student_data.py`
+Student records are stored as **tuples** inside a **list**:
+- **Tuples** are used for individual student records because student identity (ID, Name, Major) is **immutable** — it should not be accidentally modified after enrollment.
+- **Lists** are used as the outer container because the overall roster can grow or shrink (students can be added or removed).
+
+```python
+students = [
+    (101, "Alice Johnson", "Computer Science"),
+    (102, "Bob Smith", "Mathematics"),
+    (103, "Charlie Davis", "Physics"),
+    (104, "David Wilson", "Computer Science"),
+    (105, "Eve Lewis", "Mathematics"),
+]
+```
+
+#### 2. List Comprehension — `lib/filters.py`
+`filter_students_by_major(student_list, major)` uses a **list comprehension** for concise, readable filtering:
+
+```python
+# Returns a new list — all students whose major matches (case-insensitive)
+cs_students = filter_students_by_major(students, "Computer Science")
+# => [(101, 'Alice Johnson', 'Computer Science'), (104, 'David Wilson', 'Computer Science')]
+```
+
+#### 3. Formatted Output — `lib/data_processing.py`
+- `format_student_data(student)` — returns a formatted string for one student:
+  ```
+  ID: 101 | Name: Alice Johnson | Major: Computer Science
+  ```
+- `display_students(student_list)` — loops through the full list and prints every record.
+
+#### 4. Set Comprehension — `lib/set_operations.py`
+`unique_majors(student_list)` uses a **set comprehension** to collect distinct majors.  
+Sets automatically eliminate duplicates and provide O(1) membership testing:
+
+```python
+unique_majors(students)
+# => {'Computer Science', 'Mathematics', 'Physics'}
+```
+
+#### 5. Generator Expression — `lib/data_generator.py`
+`student_generator(student_list, major)` returns a **generator expression** for memory-efficient lazy evaluation.  
+Unlike a list comprehension (which builds the entire result at once), a generator produces one item at a time — ideal for large datasets:
+
+```python
+gen = student_generator(students, "Mathematics")
+next(gen)  # => (102, 'Bob Smith', 'Mathematics')
+next(gen)  # => (105, 'Eve Lewis', 'Mathematics')
+```
+
+---
+
+### Running the Tests
+
+Run the full test suite to verify all functionality:
+
+```sh
+# Using pipenv (recommended)
+python -m pipenv run pytest -v
+
+# Or inside an active pipenv shell
+pytest -v
+```
+
+Expected output: **7 passed**
+
+---
+
 ## Best Practices for Managing Student Data
 
 - **Use comments** to clarify logic.
